@@ -1,0 +1,878 @@
+{
+	"info": {
+		"_postman_id": "427a6b98-ea7b-43d6-a364-7b133f73e578",
+		"name": "Motionsense Patient_ Automation Run",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Register Patient",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let email = 'indira.s+0998@enmovi.com';\r",
+							"pm.environment.set('useremail',email);\r",
+							"let pin = '559118'\r",
+							"pm.environment.set('pin',pin);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Already Registered\", function() {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"{{useremail}}\",\r\n  \"password\": \"patient!Pass123\",\r\n  \"phone\": {\r\n    \"phoneUUId\": \"string\",\r\n    \"phoneModel\": \"string\",\r\n    \"phoneOS\": \"string\"\r\n  },\r\n  \"phoneNo\": \"+1 954-903-4022\",\r\n  \"pin\": \"{{pin}}\"\r\n}"
+				},
+				"url": {
+					"raw": "https://motionsense-api-testing.azurewebsites.net/api/patient/auth/register",
+					"protocol": "https",
+					"host": [
+						"motionsense-api-testing",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"patient",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Patient Login",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let email = 'indira.s+6643@enmovi.com';\r",
+							"pm.environment.set('useremail',email);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Patient Login successful\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"var jsonData=pm.response.json();\r",
+							"var testmessage=jsonData.accessToken\r",
+							"pm.test(testmessage,function() {\r",
+							" pm.environment.set('accessToken',testmessage);\r",
+							"});\r",
+							"\r",
+							"var jsonData=pm.response.json();\r",
+							"var testmessage2=jsonData.patientId\r",
+							"pm.test(testmessage2,function(){\r",
+							"pm.environment.set('patientId',testmessage2);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjYyYTkyYThjLWFjZjItNDBmNS0zYzI0LTA4ZDhkZTZmYWIzOSIsIm5iZiI6MTYyMTcwMTQwNCwiZXhwIjoxNjIxNzg3ODA0LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxLyJ9.9Jr2i7_cTkg2ue1Hgs_rBCus2CydCgetooEPgJ_kawI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"{{useremail}}\",\r\n  \"password\": \"patient!Pass123\",\r\n  \"phone\": {\r\n    \"phoneUUId\": \"string\",\r\n    \"phoneModel\": \"string\",\r\n    \"phoneOS\": \"string\"\r\n  }\r\n}"
+				},
+				"url": {
+					"raw": "https://motionsense-api-testing.azurewebsites.net/api/patient/auth/login",
+					"protocol": "https",
+					"host": [
+						"motionsense-api-testing",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"patient",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Patient Profile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Patient Profile\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"var jsonData=pm.response.json();\r",
+							"var testmessage=jsonData\r",
+							"pm.test(JSON.stringify(testmessage),function() {\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://motionsense-api-testing.azurewebsites.net/api/patient/profile",
+					"protocol": "https",
+					"host": [
+						"motionsense-api-testing",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"patient",
+						"profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Patient Surgeon - Practice Details",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Surgeon- Practice details\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"var jsonData=pm.response.json();\r",
+							"var testmessage=jsonData\r",
+							"pm.test(JSON.stringify(testmessage),function() {\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://motionsense-api-testing.azurewebsites.net/api/patient/surgeon",
+					"protocol": "https",
+					"host": [
+						"motionsense-api-testing",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"patient",
+						"surgeon"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Patient Surgeon - History",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Patient History\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"var jsonData=pm.response.json();\r",
+							"var testmessage=jsonData\r",
+							"pm.test(JSON.stringify(testmessage),function() {\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://motionsense-api-testing.azurewebsites.net/api/patient/history",
+					"protocol": "https",
+					"host": [
+						"motionsense-api-testing",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"patient",
+						"history"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Patient Exercise Program",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Exercise Program\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"var jsonData=pm.response.json();\r",
+							"var testmessage=jsonData\r",
+							"pm.test(JSON.stringify(testmessage),function() {\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://motionsense-api-testing.azurewebsites.net/api/patient/exercise-program",
+					"protocol": "https",
+					"host": [
+						"motionsense-api-testing",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"patient",
+						"exercise-program"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Datum Calibration Endpoint",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check status code is 200\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"var jsonData=pm.response.json();\r",
+							"var testmessage=jsonData\r",
+							"pm.test(JSON.stringify(testmessage),function() {\r",
+							"\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://motionsense-api-testing.azurewebsites.net/api/patient/history",
+					"protocol": "https",
+					"host": [
+						"motionsense-api-testing",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"patient",
+						"history"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Patient Surveys",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Surveys status\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"var jsonData=pm.response.json();\r",
+							"var testmessage=jsonData\r",
+							"pm.test(JSON.stringify(testmessage),function() {\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://motionsense-api-testing.azurewebsites.net/api/patient/assigned-surveys",
+					"protocol": "https",
+					"host": [
+						"motionsense-api-testing",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"patient",
+						"assigned-surveys"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Patient Procedure",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Patient Procedure\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"var jsonData=pm.response.json();\r",
+							"var testmessage=jsonData\r",
+							"pm.test(JSON.stringify(testmessage),function() {\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://motionsense-api-testing.azurewebsites.net/api/patient/procedure",
+					"protocol": "https",
+					"host": [
+						"motionsense-api-testing",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"patient",
+						"procedure"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Surgeon Image",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Surgeon Image\", function() {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"/*\r",
+							"var jsonData=pm.response.json();\r",
+							"var testmessage=jsonData\r",
+							"pm.test(JSON.stringify(testmessage),function() {\r",
+							"\r",
+							"});*/"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://motionsense-api-testing.azurewebsites.net/api/patient/surgeon/image",
+					"protocol": "https",
+					"host": [
+						"motionsense-api-testing",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"patient",
+						"surgeon",
+						"image"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get  Patient Wearable",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Patient Wearable\", function() {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"/*\r",
+							"var jsonData=pm.response.json();\r",
+							"var testmessage=jsonData\r",
+							"pm.test(JSON.stringify(testmessage),function() {\r",
+							"\r",
+							"});*/"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://motionsense-api-testing.azurewebsites.net/api/patient/wearable",
+					"protocol": "https",
+					"host": [
+						"motionsense-api-testing",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"patient",
+						"wearable"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Painscore",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Painscore submitted\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/*\r",
+							"var jsonData=pm.response.json();\r",
+							"var testmessage=jsonData\r",
+							"pm.test(JSON.stringify(testmessage),function() {\r",
+							"\r",
+							"});*/"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"utcSubmissionTimestamp\": \"2021-07-26T14:30:25.216Z\",\r\n  \"utcOffset\": \"+00:00\",\r\n  \"score\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://motionsense-api-testing.azurewebsites.net/api/patient/pain-score",
+					"protocol": "https",
+					"host": [
+						"motionsense-api-testing",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"patient",
+						"pain-score"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post ADL- Before surgery",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"ADL Pre Surgery- Posted\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/*\r",
+							"var jsonData=pm.response.json();\r",
+							"var testmessage=jsonData\r",
+							"pm.test(JSON.stringify(testmessage),function() {\r",
+							"\r",
+							"});*/"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"patientADL\": [\r\n    {\r\n      \"startUTCTime\": \"2021-07-16T17:14:59.987Z\",\r\n      \"utcOffset\": \"+00:00\",\r\n      \"secondsActive\": 182,\r\n      \"secondsLoadBearing\": 279,\r\n      \"secondsWorn\": 461,\r\n      \"stepCount\": 5461,\r\n      \"minimumFlexionAngleInDegrees\": 0,\r\n      \"maximumFlexionAngleInDegrees\": 126,\r\n      \"kneeAngleDistributions\": [\r\n        {\r\n          \"lowFlexionAngleInDegrees\": 126,\r\n          \"highFlexionAngleInDegrees\": 126,\r\n          \"durationInSeconds\": 21\r\n        }\r\n      ]\r\n    },\r\n    {\r\n      \"startUTCTime\": \"2021-07-17T17:14:59.987Z\",\r\n      \"utcOffset\": \"+00:00\",\r\n      \"secondsActive\": 165,\r\n      \"secondsLoadBearing\": 297,\r\n      \"secondsWorn\": 462,\r\n      \"stepCount\": 6326,\r\n      \"minimumFlexionAngleInDegrees\": 0,\r\n      \"maximumFlexionAngleInDegrees\": 113,\r\n      \"kneeAngleDistributions\": [\r\n        {\r\n          \"lowFlexionAngleInDegrees\": 113,\r\n          \"highFlexionAngleInDegrees\": 113,\r\n          \"durationInSeconds\": 21\r\n        }\r\n      ]\r\n    },\r\n    {\r\n      \"startUTCTime\": \"2021-07-18T17:14:59.987Z\",\r\n      \"utcOffset\": \"+00:00\",\r\n      \"secondsActive\": 247,\r\n      \"secondsLoadBearing\": 234,\r\n      \"secondsWorn\": 481,\r\n      \"stepCount\": 4680,\r\n      \"minimumFlexionAngleInDegrees\": 0,\r\n      \"maximumFlexionAngleInDegrees\": 118,\r\n      \"kneeAngleDistributions\": [\r\n        {\r\n          \"lowFlexionAngleInDegrees\": 118,\r\n          \"highFlexionAngleInDegrees\": 118,\r\n          \"durationInSeconds\": 21\r\n        }\r\n      ]\r\n    },\r\n    {\r\n      \"startUTCTime\": \"2021-07-19T17:14:59.987Z\",\r\n      \"utcOffset\": \"+00:00\",\r\n      \"secondsActive\": 281,\r\n      \"secondsLoadBearing\": 359,\r\n      \"secondsWorn\": 640,\r\n      \"stepCount\": 5432,\r\n      \"minimumFlexionAngleInDegrees\": 0,\r\n      \"maximumFlexionAngleInDegrees\": 123,\r\n      \"kneeAngleDistributions\": [\r\n        {\r\n          \"lowFlexionAngleInDegrees\": 123,\r\n          \"highFlexionAngleInDegrees\": 123,\r\n          \"durationInSeconds\": 21\r\n        }\r\n      ]\r\n    },\r\n    {\r\n      \"startUTCTime\": \"2021-07-20T17:14:59.987Z\",\r\n      \"utcOffset\": \"+00:00\",\r\n      \"secondsActive\": 205,\r\n      \"secondsLoadBearing\": 289,\r\n      \"secondsWorn\": 494,\r\n      \"stepCount\": 7102,\r\n      \"minimumFlexionAngleInDegrees\": 0,\r\n      \"maximumFlexionAngleInDegrees\": 127,\r\n      \"kneeAngleDistributions\": [\r\n        {\r\n          \"lowFlexionAngleInDegrees\": 127,\r\n          \"highFlexionAngleInDegrees\": 127,\r\n          \"durationInSeconds\": 21\r\n        }\r\n      ]\r\n    },\r\n    {\r\n      \"startUTCTime\": \"2021-07-21T17:14:59.987Z\",\r\n      \"utcOffset\": \"+00:00\",\r\n      \"secondsActive\": 155,\r\n      \"secondsLoadBearing\": 252,\r\n      \"secondsWorn\": 407,\r\n      \"stepCount\": 5623,\r\n      \"minimumFlexionAngleInDegrees\": 0,\r\n      \"maximumFlexionAngleInDegrees\": 116,\r\n      \"kneeAngleDistributions\": [\r\n        {\r\n          \"lowFlexionAngleInDegrees\": 116,\r\n          \"highFlexionAngleInDegrees\": 116,\r\n          \"durationInSeconds\": 21\r\n        }\r\n      ]\r\n    },\r\n    {\r\n      \"startUTCTime\": \"2021-07-22T17:14:59.987Z\",\r\n      \"utcOffset\": \"+00:00\",\r\n      \"secondsActive\": 256,\r\n      \"secondsLoadBearing\": 214,\r\n      \"secondsWorn\": 470,\r\n      \"stepCount\": 5939,\r\n      \"minimumFlexionAngleInDegrees\": 0,\r\n      \"maximumFlexionAngleInDegrees\": 122,\r\n      \"kneeAngleDistributions\": [\r\n        {\r\n          \"lowFlexionAngleInDegrees\": 122,\r\n          \"highFlexionAngleInDegrees\": 122,\r\n          \"durationInSeconds\": 21\r\n        }\r\n      ]\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://motionsense-api-testing.azurewebsites.net/api/patient/adl",
+					"protocol": "https",
+					"host": [
+						"motionsense-api-testing",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"patient",
+						"adl"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post ADL- Post surgery",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"ADL Post Surgery- Posted\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/*\r",
+							"var jsonData=pm.response.json();\r",
+							"var testmessage=jsonData\r",
+							"pm.test(JSON.stringify(testmessage),function() {\r",
+							"\r",
+							"});*/"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"patientADL\": [\r\n    {\r\n      \"startUTCTime\": \"2021-07-23T17:14:59.987Z\",\r\n      \"utcOffset\": \"+00:00\",\r\n      \"secondsActive\": 182,\r\n      \"secondsLoadBearing\": 279,\r\n      \"secondsWorn\": 461,\r\n      \"stepCount\": 5461,\r\n      \"minimumFlexionAngleInDegrees\": 0,\r\n      \"maximumFlexionAngleInDegrees\": 126,\r\n      \"kneeAngleDistributions\": [\r\n        {\r\n          \"lowFlexionAngleInDegrees\": 126,\r\n          \"highFlexionAngleInDegrees\": 126,\r\n          \"durationInSeconds\": 21\r\n        }\r\n      ]\r\n    },\r\n    {\r\n      \"startUTCTime\": \"2021-07-24T17:14:59.987Z\",\r\n      \"utcOffset\": \"+00:00\",\r\n      \"secondsActive\": 165,\r\n      \"secondsLoadBearing\": 297,\r\n      \"secondsWorn\": 462,\r\n      \"stepCount\": 6326,\r\n      \"minimumFlexionAngleInDegrees\": 0,\r\n      \"maximumFlexionAngleInDegrees\": 113,\r\n      \"kneeAngleDistributions\": [\r\n        {\r\n          \"lowFlexionAngleInDegrees\": 113,\r\n          \"highFlexionAngleInDegrees\": 113,\r\n          \"durationInSeconds\": 21\r\n        }\r\n      ]\r\n    },\r\n    {\r\n      \"startUTCTime\": \"2021-07-25T17:14:59.987Z\",\r\n      \"utcOffset\": \"+00:00\",\r\n      \"secondsActive\": 247,\r\n      \"secondsLoadBearing\": 234,\r\n      \"secondsWorn\": 481,\r\n      \"stepCount\": 4680,\r\n      \"minimumFlexionAngleInDegrees\": 0,\r\n      \"maximumFlexionAngleInDegrees\": 118,\r\n      \"kneeAngleDistributions\": [\r\n        {\r\n          \"lowFlexionAngleInDegrees\": 118,\r\n          \"highFlexionAngleInDegrees\": 118,\r\n          \"durationInSeconds\": 21\r\n        }\r\n      ]\r\n    },\r\n    {\r\n      \"startUTCTime\": \"2021-07-26T17:14:59.987Z\",\r\n      \"utcOffset\": \"+00:00\",\r\n      \"secondsActive\": 281,\r\n      \"secondsLoadBearing\": 359,\r\n      \"secondsWorn\": 640,\r\n      \"stepCount\": 5432,\r\n      \"minimumFlexionAngleInDegrees\": 0,\r\n      \"maximumFlexionAngleInDegrees\": 123,\r\n      \"kneeAngleDistributions\": [\r\n        {\r\n          \"lowFlexionAngleInDegrees\": 123,\r\n          \"highFlexionAngleInDegrees\": 123,\r\n          \"durationInSeconds\": 21\r\n        }\r\n      ]\r\n    },\r\n    {\r\n      \"startUTCTime\": \"2021-07-27T17:14:59.987Z\",\r\n      \"utcOffset\": \"+00:00\",\r\n      \"secondsActive\": 205,\r\n      \"secondsLoadBearing\": 289,\r\n      \"secondsWorn\": 494,\r\n      \"stepCount\": 7102,\r\n      \"minimumFlexionAngleInDegrees\": 0,\r\n      \"maximumFlexionAngleInDegrees\": 127,\r\n      \"kneeAngleDistributions\": [\r\n        {\r\n          \"lowFlexionAngleInDegrees\": 127,\r\n          \"highFlexionAngleInDegrees\": 127,\r\n          \"durationInSeconds\": 21\r\n        }\r\n      ]\r\n    },\r\n    {\r\n      \"startUTCTime\": \"2021-07-28T17:14:59.987Z\",\r\n      \"utcOffset\": \"+00:00\",\r\n      \"secondsActive\": 155,\r\n      \"secondsLoadBearing\": 252,\r\n      \"secondsWorn\": 407,\r\n      \"stepCount\": 5623,\r\n      \"minimumFlexionAngleInDegrees\": 0,\r\n      \"maximumFlexionAngleInDegrees\": 116,\r\n      \"kneeAngleDistributions\": [\r\n        {\r\n          \"lowFlexionAngleInDegrees\": 116,\r\n          \"highFlexionAngleInDegrees\": 116,\r\n          \"durationInSeconds\": 21\r\n        }\r\n      ]\r\n    },\r\n    {\r\n      \"startUTCTime\": \"2021-07-29T17:14:59.987Z\",\r\n      \"utcOffset\": \"+00:00\",\r\n      \"secondsActive\": 256,\r\n      \"secondsLoadBearing\": 214,\r\n      \"secondsWorn\": 470,\r\n      \"stepCount\": 5939,\r\n      \"minimumFlexionAngleInDegrees\": 0,\r\n      \"maximumFlexionAngleInDegrees\": 122,\r\n      \"kneeAngleDistributions\": [\r\n        {\r\n          \"lowFlexionAngleInDegrees\": 122,\r\n          \"highFlexionAngleInDegrees\": 122,\r\n          \"durationInSeconds\": 21\r\n        }\r\n      ]\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://motionsense-api-testing.azurewebsites.net/api/patient/adl",
+					"protocol": "https",
+					"host": [
+						"motionsense-api-testing",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"patient",
+						"adl"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post KoosJr- Survey",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"KoosJr Survey Submitted\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/*\r",
+							"var jsonData=pm.response.json();\r",
+							"var testmessage=jsonData\r",
+							"pm.test(JSON.stringify(testmessage),function() {\r",
+							"\r",
+							"});*/"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"surveyExternalId\": \"koosjr-surv\",\r\n  \"utcStartTime\": \"2021-07-25T14:55:12.749Z\",\r\n  \"utcEndTime\": \"2021-07-25T14:55:12.749Z\",\r\n  \"utcOffset\": \"+00:00\",\r\n  \"results\":[\r\n\t{ \"surveyQuestionExternalId\": \"koosjr-surv-q1\", \r\n      \"answer\": \"Severe\"},\r\n\t{ \"surveyQuestionExternalId\": \"koosjr-surv-q2\", \r\n      \"answer\": \"None\"},\r\n\t{ \"surveyQuestionExternalId\": \"koosjr-surv-q3\", \r\n      \"answer\": \"Mild\"},\r\n\t{ \"surveyQuestionExternalId\": \"koosjr-surv-q4\", \r\n      \"answer\": \"Extreme\"},\r\n\t{ \"surveyQuestionExternalId\": \"koosjr-surv-q5\", \r\n      \"answer\": \"Moderate\"},\r\n    { \"surveyQuestionExternalId\": \"koosjr-surv-q6\", \r\n      \"answer\": \"Severe\"}, \r\n\t{ \"surveyQuestionExternalId\": \"koosjr-surv-q7\", \r\n      \"answer\": \"Mild\"}\r\n]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://motionsense-api-testing.azurewebsites.net/api/patient/survey",
+					"protocol": "https",
+					"host": [
+						"motionsense-api-testing",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"patient",
+						"survey"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post VR12-Survey",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"VR12 Survey Submitted\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/*\r",
+							"var jsonData=pm.response.json();\r",
+							"var testmessage=jsonData\r",
+							"pm.test(JSON.stringify(testmessage),function() {\r",
+							"\r",
+							"});*/"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"surveyExternalId\": \"vr12-surv\",\r\n  \"utcStartTime\": \"2021-07-25T14:55:12.749Z\",\r\n  \"utcEndTime\": \"2021-07-25T14:55:12.749Z\",\r\n  \"utcOffset\": \"+00:00\",\r\n  \"results\":[\r\n    { \"surveyQuestionExternalId\": \"vr12-surv-health-q1\", \r\n      \"answer\": \"Good\"},\r\n    { \"surveyQuestionExternalId\": \"vr12-surv-activity-q1\", \r\n      \"answer\": \"Yes,limited a little\"},\r\n    { \"surveyQuestionExternalId\": \"vr12-surv-activity-q2\", \r\n      \"answer\": \"Yes,limited a little\"},\r\n    { \"surveyQuestionExternalId\": \"vr12-surv-physical-q1\", \r\n      \"answer\": \"Yes, a little of the time\"},\r\n    { \"surveyQuestionExternalId\": \"vr12-surv-physical-q2\", \r\n      \"answer\": \"Yes, a little of the time\"},\r\n    { \"surveyQuestionExternalId\": \"vr12-surv-emotional-q1\", \r\n      \"answer\": \"Yes, Some of the time\"},\r\n    { \"surveyQuestionExternalId\": \"vr12-surv-emotional-q2\", \r\n      \"answer\": \"Yes, Some of the time\"},\r\n    { \"surveyQuestionExternalId\": \"vr12-surv-pain-q1\", \r\n      \"answer\": \"Moderately\"},\r\n    { \"surveyQuestionExternalId\": \"vr12-surv-feeling-q1\", \r\n      \"answer\": \"Some of the time\"},\r\n    { \"surveyQuestionExternalId\": \"vr12-surv-feeling-q2\", \r\n      \"answer\": \"Most of the time\"},\r\n    { \"surveyQuestionExternalId\": \"vr12-surv-feeling-q3\", \r\n      \"answer\": \"All of the time\"},\r\n    { \"surveyQuestionExternalId\": \"vr12-surv-social-q1\", \r\n      \"answer\": \"Most of the time\"},\r\n    { \"surveyQuestionExternalId\": \"vr12-surv-change-q1\", \r\n      \"answer\": \"Slightly better\"},\r\n    { \"surveyQuestionExternalId\": \"vr12-surv-change-q2\", \r\n      \"answer\": \"About the same\"}\r\n]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://motionsense-api-testing.azurewebsites.net/api/patient/survey",
+					"protocol": "https",
+					"host": [
+						"motionsense-api-testing",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"patient",
+						"survey"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
